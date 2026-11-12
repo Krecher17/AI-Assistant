@@ -1,0 +1,15 @@
+# Grim local AI
+
+Chat: Qwen3 1.7B Q4_K_M through Ollama 0.40.16. Thinking is off, context is 4096 tokens, generation uses three CPU threads. Local mode is the default; localModel and Gemini model choices are stored independently. Recent context is bounded for responsiveness. A small CPU model has limited reasoning and vision capability; long answers can still take time, but text streams as it is generated.
+
+Speech: faster-whisper 1.2.1, CTranslate2 INT8 CPU (two threads), base.en, PyAV 16.1.0. The pinned PyAV version avoids a decoder incompatibility found with PyAV 19. The worker stays warm and only receives awakened command clips through stdin. Audio is decoded in memory, never written to disk. Ordinary standby audio is handled by local Vosk, not sent to a cloud provider. The UI retains a temporary wake diagnostic; no background transcript is saved.
+
+Runtime locations: .local/ollama (portable CPU binaries), .local/speech-venv (Python 3.12 environment), .local/models/whisper-base.en. Ollama model weights are under %LOCALAPPDATA%/Grim/models/ollama, outside the OneDrive source folder. Ollama binds to 127.0.0.1:11434 with cloud features disabled and at most one loaded model. Grim starts the runtime if needed. Model setup downloads need internet; inference does not. The local runtime may stay online after Grim quits and unloads an unused model after ten minutes.
+
+Official runtime archive: https://github.com/ollama/ollama/releases/download/v0.40.16/ollama-windows-amd64.zip . Verified SHA256: 50fcf5ad54277f2fa5d173ebfc93bcb017adbc0c9ef2314daabc96ca9e6aa64e . CPU files were extracted; CUDA/ROCm libraries were omitted for this Intel laptop. Model: https://ollama.com/library/qwen3:1.7b . Speech implementation: https://github.com/SYSTRAN/faster-whisper .
+
+Browser commands are parsed before app names: they preserve the requested browser and URL-encode search text. Brave, Chrome, Edge and Firefox are resolved only from known installation folders. The executable and arguments are passed separately, without a shell. Known websites and HTTPS domains can be opened directly. This opens the browser page; it does not claim to read the page, sign in, fill forms or perform arbitrary clicks. Model-proposed URL actions retain dashboard review.
+
+Cloud features are separate: selecting Gemini enables its chat/vision/image APIs. The local Qwen text model cannot interpret screenshots or generate images. ElevenLabs remains optional and uses its own key; Windows speech works locally. Gmail still requires Google OAuth, and WhatsApp still uses imported exports. Long local recordings retain a transcript if summarization exceeds the small model's context.
+
+Verification: npm test (31 tests), npm run test:voice-local (real Vosk + offline Whisper with synthetic audio), npm run test:desktop. Live local checks returned a short chat answer in about 4 seconds and transcribed sample commands in 0.9–1.4 seconds; these are examples, not guarantees. Opening a browser search bypasses model inference. The last native browser check runs from the dashboard to avoid command-runner cleanup terminating a test browser process.

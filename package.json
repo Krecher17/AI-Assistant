@@ -1,0 +1,35 @@
+{
+  "name": "grim",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Akshay's local-first desktop assistant",
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "setup:identity": "node scripts/setup-identity.mjs",
+    "test:desktop": "electron scripts/smoke-desktop.cjs",
+    "test:fixtures": "node scripts/make-wake-fixture.mjs",
+    "test:voice": "electron scripts/smoke-voice.cjs",
+    "test:companion": "electron scripts/smoke-companion.cjs",
+    "desktop": "electron .",
+    "predesktop": "node node_modules/electron/install.js",
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check server.mjs && node --check public/app.js && node --check public/presence.js && node --check public/reactor.js && node --check public/companion.js && node --check desktop/main.cjs && node --check desktop/companion.cjs",
+    "diagnose:mic": "electron scripts/diagnose-live-mic.cjs",
+    "test:voice-hybrid": "electron scripts/smoke-hybrid-voice.cjs",
+    "test:voice-local": "electron scripts/smoke-local-voice.cjs"
+  },
+  "devDependencies": {
+    "electron": "45.3.0"
+  },
+  "dependencies": {
+    "@vladmandic/human": "3.3.6",
+    "sherpa-onnx-node": "2.0.1",
+    "three": "0.187.0",
+    "vosk-browser": "0.0.8"
+  }
+}
