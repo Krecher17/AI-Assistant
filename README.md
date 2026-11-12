@@ -1,154 +1,568 @@
-# Grim
+💀 GRIM — Your Personal AI Assistant
 
-A working first version of Akshay's Windows personal assistant, with a localhost dashboard and local SQLite memory. Chat now defaults to free local Ollama (Qwen3 1.7B), and command transcription uses offline Whisper. Gemini remains an explicitly selectable cloud option. No keys are included.
+Your AI. Your Desktop. Your Rules.
 
-Grim is a black, gold, and white desktop companion. A tiny animated reaper rests beside your cursor, emerges when you say **Hey Grim**, shows task animations, and returns after the task. Closing the dashboard leaves the companion and local wake listener running in the tray. Open the dashboard explicitly through the launcher or tray.
+Grim is a local-first, intelligent personal AI assistant built for Windows. It combines conversational AI, voice recognition, desktop automation, persistent memory, and an animated desktop companion into one application.
 
-**Change its voice:** open **Grim Systems → Voice & speech**. Select Windows, browser, or ElevenLabs, choose a voice, set speed/volume, then Save and preview. No speaker enrollment or voice matching is required. Optional laptop face recognition personalizes the greeting with “Yes, Akshay”; it never blocks commands. See [IDENTITY.md](IDENTITY.md) and [GRIM_COMPANION.md](GRIM_COMPANION.md).
+Designed to feel like a personal digital companion rather than just another chatbot, Grim can understand commands, launch applications, manage reminders, help with coding, and interact with selected personal information.
 
-## Start on this laptop
+With support for Ollama, Google Gemini, offline speech recognition, and optional cloud integrations, Grim gives users control over how their AI assistant operates.
 
-Double-click **Start Grim.cmd**, or run:
+---
 
-```powershell
+✨ Key Features
+
+🧠 Intelligent AI Chat
+
+- Conversational AI for everyday questions and assistance.
+- Local AI powered by Ollama and Qwen3.
+- Optional Google Gemini integration.
+- Coding assistance, explanations, and problem-solving.
+- Persistent conversation history and user-defined memory.
+- Configurable AI models.
+
+🎙️ Voice Assistant
+
+- Wake-word activation using "Hey Grim".
+- Offline wake-word detection with Vosk.
+- Offline speech transcription using Whisper.
+- Natural voice responses using Windows speech.
+- Optional ElevenLabs voice integration.
+- Hands-free voice commands.
+- Microphone and listening controls.
+
+💀 Animated Desktop Companion
+
+Grim isn't limited to a traditional chat window.
+
+An animated grim-reaper companion can appear near your mouse cursor and respond visually to different activities.
+
+Animations include:
+
+- Sleeping and idle states.
+- Greeting and listening.
+- Thinking and processing.
+- Performing tasks.
+- Speaking and celebrating successful actions.
+
+The companion can continue running in the Windows system tray even when the main dashboard is closed.
+
+🖥️ Desktop Integration
+
+- Launch installed Windows applications.
+- Open websites and perform browser searches.
+- Discover registered Windows applications.
+- Search files inside approved directories.
+- Read supported text and code files.
+- Move files with user approval.
+- Send supported files to the Recycle Bin.
+- Capture selected screen content for AI analysis.
+
+Sensitive file operations proposed by the AI require explicit user approval.
+
+🧩 Persistent Memory
+
+Grim can remember information explicitly saved by the user, including:
+
+- Personal preferences.
+- Ongoing projects.
+- Learning goals.
+- Important notes.
+- User corrections.
+
+Memory is stored locally using SQLite and can be viewed, edited, or deleted.
+
+⏰ Reminders and Productivity
+
+- Create reminders using natural-language commands.
+- Receive desktop notifications.
+- Store reminders across application restarts.
+- Review overdue reminders when Grim starts again.
+- Generate meeting summaries and suggested tasks.
+
+Reminders require Grim to be running and do not wake a sleeping computer.
+
+📧 Gmail Integration
+
+Grim supports optional read-only Gmail access through Google OAuth.
+
+Supported functionality includes:
+
+- Connecting a Gmail account securely.
+- Searching emails.
+- Reading selected message content.
+- Answering questions based on retrieved emails.
+
+Grim does not currently send, delete, or modify emails.
+
+💬 WhatsApp Knowledge
+
+- Import exported WhatsApp text conversations.
+- Search imported conversation history.
+- Retrieve relevant excerpts.
+- Ask questions about imported discussions.
+
+Live WhatsApp synchronization and message sending are not currently supported.
+
+🎨 AI Image Generation
+
+With a compatible Gemini configuration, Grim can generate images from text prompts and maintain a local image library.
+
+Image generation is not supported by the default local Qwen text model.
+
+📱 Mobile Browser Preview
+
+Grim provides an experimental mobile-friendly dashboard accessible from an Android device through USB port forwarding.
+
+This is currently a browser-based preview, not a native Android application.
+
+---
+
+🛠️ Technology Stack
+
+Component| Technology
+Programming language| JavaScript / Node.js
+Desktop application| Electron
+Backend| Node.js
+Frontend| HTML, CSS, JavaScript
+Local AI| Ollama + Qwen3 1.7B
+Cloud AI| Google Gemini
+Speech recognition| Vosk + faster-whisper
+Voice output| Windows Speech / ElevenLabs
+Database| SQLite
+Authentication| Local pairing and session authentication
+Desktop platform| Windows
+Email integration| Gmail API + OAuth 2.0
+Mobile preview| Android + ADB
+
+---
+
+🚀 Getting Started
+
+Prerequisites
+
+Before installing Grim, ensure you have:
+
+- Windows operating system.
+- Node.js version 24 or newer.
+- npm.
+- Git.
+- A working microphone for voice commands.
+- Internet access for initial dependency and model downloads.
+
+Optional requirements include a webcam for face-based greetings, a Gemini API key for cloud features, and an ElevenLabs API key for optional speech synthesis.
+
+Step 1: Clone the Repository
+
+Open PowerShell or a terminal and run:
+
+git clone https://github.com/Krecher17/AI-Assistant.git
+
+Navigate into the project directory:
+
+cd AI-Assistant
+
+Step 2: Install Dependencies
+
 npm install
+
+This installs the project's Node.js dependencies.
+
+Local Ollama models and the offline speech runtime may require additional installation. See "LOCAL_AI.md" (LOCAL_AI.md) for the documented model versions and runtime locations.
+
+Step 3: Configure Environment Variables
+
+Copy the example configuration file:
+
+Copy-Item .env.example .env
+
+Edit ".env" and add any credentials you want to use.
+
+For example:
+
+GEMINI_API_KEY=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+ELEVENLABS_API_KEY=
+ELEVENLABS_VOICE_ID=
+PORT=4317
+
+These integrations are optional. A Gemini API key is not required when using the local Ollama chat model.
+
+Important: Never upload API keys, OAuth credentials, or your ".env" file to GitHub.
+
+Step 4: Start Grim
+
+Run the desktop application:
+
 npm run desktop
-```
 
-Node.js 24+ is required. The desktop startup script installs the Electron runtime if it is absent. The app opens its authenticated localhost dashboard automatically. Close the window to keep the assistant in the system tray; use **Quit Grim** from its tray menu to stop it. The tray menu also offers **Keep window on top** and an opt-in Windows sign-in setting. `Ctrl+Shift+Space` brings it forward and toggles voice-command recording. Keep the project folder in place while using this development build.
+Alternatively, double-click:
 
-For a browser-only session:
+Start Grim.cmd
 
-```powershell
+The desktop application will open its local dashboard.
+
+To run the browser-only version:
+
 npm start
-```
 
-Open the private pairing link printed in the terminal. Keep that terminal running. The normal address without its pairing fragment does not unlock a fresh browser session. Do not publish or share the pairing link.
+Open the private pairing URL displayed in the terminal.
 
-## Local model update
+Keep the pairing link confidential.
 
-The local runtime and models are installed on this laptop. No AI API key is needed for local chat or voice commands. Start Grim normally: its backend starts the loopback Ollama server and warms local speech. See [LOCAL_AI.md](LOCAL_AI.md) for locations, versions, limitations and checks.
+Step 5: Configure Your Assistant
 
-Commands such as **open Brave and search for YouTube**, **search for GitHub in Brave**, **open github**, and **search YouTube for JavaScript tutorials** execute through the local browser router without asking a language model. Regular installed apps still use Windows discovery. Model-generated file changes still need approval.
+Inside Grim:
 
-In Settings, choose **Local Ollama** and model **qwen3:1.7b**. Use Test connection to check it. The Gemini settings below apply only if you explicitly select Gemini.
+1. Open Settings & connections.
+2. Select Local Ollama or Gemini.
+3. Configure voice and speech preferences.
+4. Add folders Grim is allowed to access.
+5. Configure optional integrations.
+6. Start chatting or say "Hey Grim".
 
-## First setup
+---
 
-1. Open **Settings & connections** and enter your own Gemini API key. It is sent only to the local backend. With **Remember** enabled, Windows DPAPI protects it for your current Windows account. Otherwise it stays in backend memory until exit.
-2. Choose a model available to your API project; the default is `gemini-3.5-flash-lite`. Saving a key does not validate billing or model access; the first request reports provider errors.
-3. Add specific folders in **Files you choose**, one absolute path per line. No file folders are enabled by default.
-4. Add projects, preferences, learning goals, or corrections in **Memory**. These persist across restarts and are included with AI chat requests. You can edit or forget them.
+💬 Example Commands
 
-Alternatively copy `.env.example` to `.env` and fill in provider configuration locally. A running process must restart after `.env` changes. Never put a real key in source control or paste one into chat.
+Here are some things you can ask Grim:
 
-## Implemented
+Desktop control
 
-| Capability | Current behavior |
-| --- | --- |
-| Chat and coding help | Gemini Generate Content API, recent chat, explicit memory, bounded function calls, optional web search and citations |
-| Voice | Record a command, transcribe with Gemini, review, then send; spoken replies through browser/Windows speech, or optional ElevenLabs |
-| Personal wake word | Local Vosk recognition with no speaker gate; wake commands can be sent hands-free |
-| Face recognition | Local camera descriptors, encrypted enrollment, on-demand continuous matching, visible camera control |
-| Files | Bounded filename search and small text/code-file reading in enabled folders; approved opening, single-file moving, and Recycle Bin deletion |
-| Apps | Dynamic Windows app discovery; explicit app commands launch locally, while model-generated proposals remain reviewed |
-| Screen understanding | Explicit one-time screen/window snapshot, visible preview, sent with next chat request; screenshot bytes are not persisted |
-| Memory | SQLite CRUD for projects, preferences, goals, and corrections; no model retraining |
-| Reminders | Durable local reminders; tray notifications in desktop mode, optional browser notifications in browser mode; overdue items surface on restart |
-| Images | Gemini image generation, local image library, image downloads |
-| Gmail | Read-only OAuth connection and on-demand message search after Google setup |
-| WhatsApp knowledge | Import an exported text chat, search source excerpts, and open original local source by ID |
-| Recordings | Microphone recording or audio upload, transcription, schema-validated meeting summary, decisions, suggested tasks, and open questions |
-| Phone preview | Same responsive dashboard over an authenticated USB-forwarded localhost connection; shared desktop data, not an installed native app |
-| Review/history | One-shot action approvals, result receipts, local activity log, and text-data export |
+Hey Grim, open Calculator.
 
-Example requests:
+Open Brave and search for YouTube.
 
-- “Search my enabled folders for invoice.”
-- “Read C:\\Users\\Akshay\\Documents\\Projects\\app\\server.ts and explain likely bugs.”
-- “Open Calculator.”
-- “Remember that I prefer TypeScript for this project.”
-- “What did the imported WhatsApp project chat say about the deadline?”
-- “Search Gmail for newer_than:7d subject:meeting and summarize the results.”
-- “Remind me to revise networking tomorrow at 7 PM India time.”
-- “Create an image of a calm futuristic study room.”
+Search Google for JavaScript tutorials.
 
-File/app changes proposed by the model require clicking **Approve**. Direct user app-launch commands execute immediately against the Windows catalog. Proposals expire after ten minutes and do not survive restart. The app rechecks paths, permissions, file identity, and destination existence at approval. It cannot permanently delete files or recursively delete folders. Executable/script file opening is blocked to avoid executing source files through Windows associations. Use your editor to open those files directly.
+Open GitHub.
 
-Filename search is bounded to seven levels, 12,000 inspected entries, and sixty results; it is not a full filesystem index. Text reads are capped at 256 KB. Credential folders and common private configuration files are excluded. Source retrieval is lexical excerpt search, not a semantic index; returned excerpts may omit relevant material in a large export.
+AI assistance
 
-## Gmail setup
+Explain object-oriented programming.
 
-The supplied email address is a sign-in hint, not permission to read that account. Grim never asks for your Gmail password.
+Help me debug this JavaScript code.
 
-1. In Google Cloud, enable **Gmail API** for your project.
-2. Configure the OAuth consent screen. For a personal app in testing, add your own Gmail address as a test user.
-3. Create an OAuth client of type **Desktop app**.
-4. Put its client ID and client secret into `.env` as `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`.
-5. Restart Grim, then choose **Connect Gmail** in Settings. Finish Google's authorization in your browser yourself.
+Summarize this text.
 
-The redirect address is `http://127.0.0.1:4317/oauth/google/callback` at the default port, using the installed-app loopback flow with PKCE and a short-lived random state. Only `gmail.readonly` is requested. Tokens are DPAPI protected in the local database. Search retrieves up to eight emails per request, excludes attachments, and prefers plain-text bodies (HTML-only messages fall back to Gmail snippets). Requested excerpts are sent to Gemini to answer your question. Search results may remain in your local chat history. Disconnecting removes local token access and attempts to revoke Google access; it does not delete old chat history.
+Explain how machine learning works.
 
-Google consent, testing-token expiry, restricted-scope requirements, API quotas, and account policy can affect access. Errors appear in the UI. Do not treat the connection as verified until a real sign-in and query succeed.
+Memory
 
-## WhatsApp and phone recordings
+Remember that I prefer TypeScript.
 
-For this version, export an individual WhatsApp chat **without media**, then import its `.txt` file under **Knowledge → WhatsApp export**. An imported copy is searchable local context. Live WhatsApp sync, sending messages, and automatic history scraping are not implemented.
+Remember that I am working on an AI project.
 
-For recordings, use **Knowledge → Start recording** or **Upload audio**. Maximum payload is 12 MB. Audio goes to Gemini on stop/upload; raw audio is not stored by the backend. The transcript is saved before summarization, so it remains available if summarization fails. Tasks are suggestions, not scheduled actions; choose a task's reminder button and supply a time to create a reminder. Failed microphone uploads are offered as a local download while the page remains open. This is not crash-safe audio capture.
+What preferences have I saved?
 
-Current transcripts do not identify speakers. Speaker diarization, robust long-session chunking, offline phone queues, and native Android capture are future work.
+Productivity
 
-## USB phone browser preview
+Remind me to study tomorrow at 7 PM.
 
-This does not install an Android APK. Once an authorized Android device is connected, select its serial and run:
+Search my enabled folders for project files.
 
-```powershell
-adb devices -l
-adb -s YOUR_DEVICE_SERIAL reverse tcp:4317 tcp:4317
-```
+Summarize this meeting transcript.
 
-On the phone, open `http://127.0.0.1:4317/` with the **same private `#pair=...` fragment** from the running desktop server. In desktop mode the pairing URL is intentionally not logged; use browser-only `npm start` to obtain a pairing link for this preview. Stop the desktop instance first to free the port. The server remains loopback-only. Both clients use the same database, with periodic refresh. USB disconnection interrupts access; this version has no offline queue or internet relay. Browser microphone behavior depends on the phone/browser and must be verified on the actual device. No phone was explored, tested, or installed as part of the desktop build.
+Commands requiring optional integrations work only after those integrations are configured.
 
-Before authoring Android tests, explore the target application and verify device interactions with ARTEMIS as required by this project's mobile rules.
+---
 
-## ElevenLabs
+🏗️ Project Structure
 
-Set `ELEVENLABS_API_KEY` in `.env` and restart. In **Voice & speech**, select ElevenLabs and enter its voice ID, then Save and preview. Windows speech is the default. Playback is limited to the first 1,000 characters of a reply.
+AI-Assistant/
+│
+├── desktop/
+│   └── Electron desktop application
+│
+├── public/
+│   └── Dashboard and interface assets
+│
+├── src/
+│   └── Application modules
+│
+├── scripts/
+│   └── Setup and testing utilities
+│
+├── test/
+│   └── Automated tests
+│
+├── server.mjs
+│
+├── package.json
+│
+├── .env.example
+│
+├── Start Grim.cmd
+│
+├── LOCAL_AI.md
+│
+├── GRIM_COMPANION.md
+│
+├── IDENTITY.md
+│
+├── PROJECT_PLAN.md
+│
+└── README.md
 
-## Storage and boundaries
+---
 
-Default data location: `%LOCALAPPDATA%\\Grim` on Windows. Override with `GRIM_DATA_DIR` if needed. The code lives in the current OneDrive project folder, but the default database does not.
+🔐 Privacy and Security
 
-- `grim.sqlite` plus SQLite WAL/SHM files: chat, memory, reminders, source text, settings, and activity.
-- `images/`: generated images.
-- API keys and Gmail tokens: encrypted for the current Windows account with DPAPI. Other database content and images are **not encrypted at rest**.
-- `.env`, if used: plaintext local configuration excluded from source control. Protect it through your OS account controls.
+Grim is designed with a local-first approach.
 
-The HTTP service binds to `127.0.0.1`, validates Host/Origin, uses random pairing and HttpOnly SameSite cookies, has no permissive CORS, enforces request-size limits, and requires a same-origin custom header for writes. This is intended for a trusted single-user laptop, not a multi-user or internet-hosted deployment. The pairing token is a bearer credential. Local processes running as your Windows account remain within the trust boundary.
+Local Processing
 
-AI receives the question, recent chat, saved memory, and any requested tool results. Screen captures are sent only with the next message. Imported messages and files are treated as untrusted source data, not new permissions. The model does not receive a raw shell execution tool. Requests use Google’s Gemini API; this is not a claim of zero provider retention. Review your provider's data settings and your account's usage charges.
+When configured with local AI, supported chat and voice processing can operate without sending requests to a cloud AI provider.
 
-Forgetting a memory/source removes that item from the active app store; it does not redact earlier chat messages or guarantee forensic erasure of SQLite pages/backups. Clear chat separately to remove saved conversation records. Text-data export excludes secrets and image binaries. Keep the server running and laptop awake for reminders. Missed reminders are marked due on the next running session; this version does not schedule Windows wake timers.
+The local setup uses:
 
-## Still planned
+- Ollama for language-model inference.
+- Qwen3 for text generation.
+- Vosk for wake-word detection.
+- Whisper for speech transcription.
+- SQLite for persistent application data.
 
-- Low-latency conversational streaming voice and robust interruption handling.
-- Full Windows UI navigation/clicking/typing and robust interruption handling.
-- Native Android installation, offline audio capture, speaker-segmented transcripts, authenticated offline synchronization, and background queues.
-- Calendar synchronization, meeting invitations, Spotify account playback and taste, live WhatsApp access where supported.
-- Stronger liveness checks, calibrated recognition, and a richer project/semantic memory model.
-- Signed installer, packaged updates, migration/backup tooling, and production hardening.
+Initial model downloads require internet access.
 
-## Verification
+Controlled File Access
 
-```powershell
+Grim does not automatically have access to every folder on your computer.
+
+Users must explicitly enable directories.
+
+Model-generated sensitive actions require approval before execution.
+
+Credential Protection
+
+On Windows, supported stored credentials are protected using DPAPI.
+
+Other SQLite records and generated images are not encrypted at rest.
+
+Environment files may contain plaintext secrets and should be protected.
+
+Local Server Security
+
+The backend listens on:
+
+127.0.0.1
+
+It uses private pairing and authenticated sessions.
+
+Grim is intended for a trusted, single-user Windows computer.
+
+Do not expose the development server directly to the public internet.
+
+Cloud Services
+
+When Gemini or other cloud services are enabled, relevant requests and selected content may be sent to those providers.
+
+Users should review the privacy policies and pricing of connected services.
+
+---
+
+⚙️ Configuration
+
+AI Models
+
+Grim supports two primary AI options.
+
+Local Ollama
+
+- Runs supported text inference locally.
+- Does not require a cloud AI API key.
+- Uses Qwen3 1.7B in the documented default configuration.
+- May have limited reasoning capability compared with larger models.
+
+Google Gemini
+
+- Optional cloud-based AI.
+- Requires an API key.
+- Supports additional capabilities such as compatible vision and image-generation workflows.
+- Subject to provider quotas and availability.
+
+Voice Settings
+
+Users can configure:
+
+- Voice provider.
+- Voice selection.
+- Speech speed.
+- Playback volume.
+- Optional ElevenLabs voice ID.
+
+Data Storage
+
+By default, application data is stored at:
+
+%LOCALAPPDATA%\Grim
+
+The location can be overridden with:
+
+GRIM_DATA_DIR=
+
+Stored information includes conversations, saved memory, reminders, activity history, and generated images.
+
+---
+
+🧪 Testing
+
+Run the automated checks:
+
 npm run check
+
+Run the test suite:
+
 npm test
-```
 
-Automated tests cover persistent memory, scope-limited deletion, path traversal and junction escapes, credential-file exclusion, approval replay and stale-file prevention, tool-result round trips, authentication/CSRF/Host boundaries, secret redaction, source CRUD/search, and transcript preservation after summary failure. Provider responses are mocked in tests; no live Gemini, Gmail, ElevenLabs, Spotify playback, or Android result is implied.
+Additional testing commands include:
 
-Official implementation references: [Gemini API](https://ai.google.dev/api/generate-content), [function calling](https://ai.google.dev/gemini-api/docs/function-calling), [image generation](https://ai.google.dev/gemini-api/docs/image-generation), [audio understanding](https://ai.google.dev/gemini-api/docs/audio), [Electron security](https://www.electronjs.org/docs/latest/tutorial/security), and [Google installed-app OAuth](https://developers.google.com/identity/protocols/oauth2/native-app).
+npm run test:desktop
+npm run test:voice
+npm run test:companion
+npm run test:voice-local
 
-Migrating from the initial OpenAI build: restart Grim and enter a Gemini key in Settings. Old OpenAI keys and chat-model settings are never reused for Gemini. Chats, memories, sources, reminders, Gmail access, and existing images are preserved. Gemini model access, billing, and limits depend on your Google project. Get a key from [Google AI Studio](https://aistudio.google.com/apikey). The inline audio limit is now 12 MB to stay within Gemini request-size limits after base64 encoding.
+Some tests require Windows, Electron, audio fixtures, or installed speech models.
+
+Automated tests do not guarantee that external APIs or integrations will work without valid credentials and configuration.
+
+---
+
+🗺️ Development Roadmap
+
+Grim is an evolving project, with several improvements planned for future releases.
+
+Phase 1 — Desktop Assistant
+
+- [x] Electron desktop application.
+- [x] Local dashboard.
+- [x] AI-powered chat.
+- [x] Persistent memory.
+- [x] Windows application launching.
+- [x] File access with permissions.
+
+Phase 2 — Voice and Companion
+
+- [x] Wake-word recognition.
+- [x] Offline speech transcription.
+- [x] Voice responses.
+- [x] Animated desktop companion.
+- [x] System tray integration.
+- [x] Optional face-based greetings.
+- [ ] More natural real-time voice conversations.
+- [ ] Improved interruption handling.
+
+Phase 3 — Productivity
+
+- [x] Local reminders.
+- [x] Gmail read-only integration.
+- [x] WhatsApp export searching.
+- [x] Audio transcription and meeting summaries.
+- [ ] Calendar synchronization.
+- [ ] Meeting scheduling integrations.
+- [ ] Spotify integration.
+
+Phase 4 — Advanced Automation
+
+- [ ] Advanced Windows UI navigation.
+- [ ] General-purpose clicking and typing.
+- [ ] More sophisticated task workflows.
+- [ ] Improved contextual memory.
+- [ ] Stronger identity verification.
+
+Phase 5 — Mobile and Distribution
+
+- [x] Experimental Android browser preview.
+- [ ] Native Android application.
+- [ ] Desktop-mobile synchronization.
+- [ ] Offline mobile recording queues.
+- [ ] Signed Windows installer.
+- [ ] Automatic application updates.
+- [ ] Backup and restore tools.
+
+Roadmap items represent development goals, not guaranteed release commitments.
+
+---
+
+⚠️ Current Limitations
+
+Grim is an early development project.
+
+Some important limitations include:
+
+- Windows is the primary supported desktop platform.
+- Local AI performance depends on hardware and model size.
+- The local Qwen text model does not support image generation or screenshot understanding.
+- General Windows UI automation is not yet implemented.
+- Gmail access is read-only.
+- WhatsApp requires manually exported conversations.
+- The Android experience is currently a browser preview.
+- Reminders depend on the application running.
+- Some features require cloud credentials or additional local models.
+- The application is not yet packaged as a signed production installer.
+
+---
+
+🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+To contribute:
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Make your changes.
+4. Test your implementation.
+5. Submit a pull request explaining your changes.
+
+Please avoid committing API keys, private data, or credentials.
+
+For bugs or feature suggestions, open a GitHub issue with a clear description.
+
+---
+
+📚 Additional Documentation
+
+For more technical information, see:
+
+- "Local AI Setup" (LOCAL_AI.md)
+- "Desktop Companion" (GRIM_COMPANION.md)
+- "Voice and Face Recognition" (IDENTITY.md)
+- "Desktop App Launching" (CORE_UPDATE.md)
+- "Project Plan" (PROJECT_PLAN.md)
+
+---
+
+👨‍💻 Developer
+
+Akshay Shankar
+
+GitHub: "@Krecher17" (https://github.com/Krecher17)
+
+Repository: "AI-Assistant" (https://github.com/Krecher17/AI-Assistant)
+
+---
+
+🌟 Project Vision
+
+The goal of Grim is to create a personal AI assistant that feels like a natural extension of the user's computer.
+
+An assistant that can understand, remember, communicate, and help with everyday tasks while keeping the user in control.
+
+Grim aims to combine the flexibility of modern AI with the convenience of a desktop companion and the privacy advantages of local processing.
+
+The long-term vision is simple:
+
+An intelligent digital companion that works with you, learns from the information you choose to share, and helps make technology more personal.
+
+---
+
+<div align="center">💀 GRIM
+
+More than a chatbot. Your personal desktop companion.
+
+Built with curiosity, code, and AI.
+
+⭐ Star the repository if you find the project interesting!
+
+</div>
